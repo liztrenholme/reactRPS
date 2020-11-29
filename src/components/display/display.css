@@ -1,0 +1,13 @@
+.display {
+    border-radius: 15px;
+    padding: 1em;
+}
+.btn {
+    margin-top: -2em;
+    margin-left: 10em;
+    position: absolute;
+    padding: .5em;
+    border: none;
+    background-color: #fff;
+    opacity: .8;
+}
