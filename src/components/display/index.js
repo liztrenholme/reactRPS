@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './display.css';
 import PropTypes from 'prop-types';
+import Rock from '../rock';
+import Paper from '../paper';
+import Scissors from '../scissors';
 
 class Display extends Component {
   render() {
@@ -14,6 +17,9 @@ class Display extends Component {
           borderRadius: '15px'
         }}
         />
+        <Rock />
+        <Paper />
+        <Scissors />
       </div>
     );
   }
