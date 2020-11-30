@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import './main.css';
 import Display from '../display/index';
@@ -7,8 +8,9 @@ import InfoIconCircle from './assets/infoicon.png';
 import json from '../../../package.json';
 import Firebase from 'firebase';
 import config from '../../config';
+import ChatBox from '../chatBox';
 
-Firebase.initializeApp(config.firebase);
+Firebase.initializeApp(config);
 
 class Main extends Component {
 state = {
@@ -17,27 +19,27 @@ state = {
   showInstructions: false,
   p1turn: true,
   p2turn: false,
-  nameChosen: false
+  nameChosen: false,
+  choice: ''
 }
 
 writeUserData = () => {
   Firebase.database().ref('/').set(this.state);
-  // eslint-disable-next-line no-console
   console.log('DATA SAVED');
 }
 
-getUserData = () => {
-  let ref = Firebase.database().ref('/');
+getChatData = () => {
+  let ref = Firebase.database().ref('/chat');
   ref.on('value', snapshot => {
     const state = snapshot.val();
-    this.setState(state);
+    console.log('what is coming back??', state);
+    // this.setState(state);
   });
-  // eslint-disable-next-line no-console
   console.log('DATA RETRIEVED');
 }
 
 componentDidMount() {
-  // this.getUserData();
+  this.getChatData();
 }
 
 // componentDidUpdate(prevProps, prevState) {
@@ -65,12 +67,14 @@ saveName = () => {
 }
 
 handleSelectChoice = (choice) => {
-  // eslint-disable-next-line no-console
   console.log('choice is', choice);
+  // const chosen = choice.split('1')[1] || choice.split('2')[1];
+  this.setState({choice});
 }
 
 render() {
-  const { name, contrast, error, p1turn, p2turn, nameChosen } = this.state;
+  const { name, contrast, error, p1turn, p2turn, nameChosen, choice } = this.state;
+  console.log('config', config);
   return (
     <div className="main">
       <h1 className='header' style={{color: contrast}}>Rock, Paper, Scissors</h1>
@@ -118,11 +122,22 @@ render() {
       </div>
       <div className='gameboard'>
         <div className='left-side'>
-          <Display player='p1' isTurn={p1turn} handleSelect={this.handleSelectChoice} />
+          <Display 
+            player='p1' 
+            isTurn={p1turn} 
+            handleSelect={this.handleSelectChoice}
+            choice={choice} />
         </div>
         <div className='right-side'>
-          <Display player='p2' isTurn={p2turn} handleSelect={this.handleSelectChoice} />
+          <Display 
+            player='p2' 
+            isTurn={p2turn} 
+            handleSelect={this.handleSelectChoice}
+            choice={choice} />
         </div>
+      </div>
+      <div>
+        <ChatBox />
       </div>
       <h3>Version: {json.version}</h3>
     </div>
