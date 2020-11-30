@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Colorbox from './components/colorbox/index';
+import Main from './components/main/index';
 
 function App() {
   return (
     <div className="App">
-      <Colorbox />
+      <Main />
     </div>
   );
 }

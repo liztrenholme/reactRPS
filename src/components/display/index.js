@@ -7,26 +7,21 @@ import Scissors from '../scissors';
 
 class Display extends Component {
   render() {
+    const { player, isTurn, handleSelect } = this.props;
     return (
-      <div className='display'>
-        <div style={{
-          width: '20em', 
-          height: '10em', 
-          backgroundColor: this.props.color, 
-          border: '5px solid #fff',
-          borderRadius: '15px'
-        }}
-        />
-        <Rock />
-        <Paper />
-        <Scissors />
+      <div className='display' style={isTurn ? {border: '3px', borderColor: 'blue', borderStyle: 'solid'} : {}}>
+        <Rock display={true} player={player} handleSelect={handleSelect} />
+        <Paper display={true} player={player} handleSelect={handleSelect} />
+        <Scissors display={true} player={player} handleSelect={handleSelect} />
       </div>
     );
   }
 }
 
 Display.propTypes = {
-  color: PropTypes.string
+  player: PropTypes.string,
+  isTurn: PropTypes.bool,
+  handleSelect: PropTypes.func
 };
 
 export default Display;

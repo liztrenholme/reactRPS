@@ -3,20 +3,22 @@ import './paper.css';
 import PropTypes from 'prop-types';
 import paperImg from './assets/paper.png';
 
-const Paper = ({ handleClick, display }) => {
+const Paper = ({ handleSelect, display, player }) => {
   return display ? (
     <div>
       <img 
+        className='paper-sketch'
         src={paperImg} 
-        alt='paper'
-        onClick={handleClick} />
+        alt={`${player}paper`}
+        onClick={() => handleSelect(`${player}paper`)} />
     </div>
   ) : null;
 };
 
 Paper.propTypes = {
-  handleClick: PropTypes.func,
-  display: PropTypes.bool
+  handleSelect: PropTypes.func,
+  display: PropTypes.bool,
+  player: PropTypes.string
 };
   
 export default Paper;

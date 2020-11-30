@@ -1,6 +1,6 @@
 {
   "name": "reactrps",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://liztrenholme.github.io/reactRPS",
   "dependencies": {
@@ -27,6 +27,7 @@
     "eslint-plugin-react": "7.16.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "4.3.0",
+    "firebase": "^8.1.1",
     "fs-extra": "^8.1.0",
     "gh-pages": "^2.1.1",
     "html-webpack-plugin": "4.0.0-beta.5",

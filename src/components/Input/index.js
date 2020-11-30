@@ -4,20 +4,19 @@ import PropTypes from 'prop-types';
 
 class Input extends Component {
   render() {
-    const { color, handleColorChange } = this.props;
+    const { name, handleTextChange } = this.props;
     return (
       <div className="input">
-        <input value={color} 
-          onChange={handleColorChange} />
+        <input value={name} 
+          onChange={handleTextChange} />
       </div>
     );
   }
 }
 
 Input.propTypes = {
-  color: PropTypes.string,
-  handleColorChange: PropTypes.func,
-  mode: PropTypes.string
+  name: PropTypes.string,
+  handleTextChange: PropTypes.func
 };
   
 
