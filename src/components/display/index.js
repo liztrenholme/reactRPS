@@ -7,12 +7,28 @@ import Scissors from '../scissors';
 
 class Display extends Component {
   render() {
-    const { player, isTurn, handleSelect } = this.props;
+    const { player, isTurn, handleSelect, choice } = this.props;
     return (
-      <div className='display' style={isTurn ? {border: '3px', borderColor: 'blue', borderStyle: 'solid'} : {}}>
-        <Rock display={true} player={player} handleSelect={handleSelect} />
-        <Paper display={true} player={player} handleSelect={handleSelect} />
-        <Scissors display={true} player={player} handleSelect={handleSelect} />
+      <div className='display' style={isTurn ? {border: '3px', borderColor: 'blue', borderStyle: 'solid'} 
+        : {}}>
+        <Rock 
+          display={true} // {isTurn}
+          player={player} 
+          handleSelect={handleSelect}
+          choice={choice}
+        />
+        <Paper 
+          display={true} // {isTurn} 
+          player={player} 
+          handleSelect={handleSelect}
+          choice={choice}
+        />
+        <Scissors 
+          display={true} // {isTurn} 
+          player={player} 
+          handleSelect={handleSelect}
+          choice={choice}
+        />
       </div>
     );
   }
@@ -21,7 +37,8 @@ class Display extends Component {
 Display.propTypes = {
   player: PropTypes.string,
   isTurn: PropTypes.bool,
-  handleSelect: PropTypes.func
+  handleSelect: PropTypes.func,
+  choice: PropTypes.string
 };
 
 export default Display;

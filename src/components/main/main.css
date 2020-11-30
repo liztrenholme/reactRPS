@@ -3,8 +3,8 @@
     flex-direction: column;
     align-items: center;
     margin: 2em;
-    background-image: url('./assets/gauge.png');
-    background-position: 90% 10%;
+    background-image: url('./assets/clock.png');
+    background-position: 140% 10%;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 }
