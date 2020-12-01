@@ -17,38 +17,47 @@ state = {
   name: '',
   error: '',
   showInstructions: false,
-  p1turn: true,
-  p2turn: false,
+  // p1turn: false,
+  // p2turn: false,
   nameChosen: false,
-  choice: ''
+  choice: '',
+  currentPlayers: 0,
+  currentPlayerTurn: null
 }
 
-writeUserData = () => {
-  Firebase.database().ref('/').set(this.state);
-  console.log('DATA SAVED');
+setPlayer = () => {
+  const {name} = this.state;
+  const playerRef = Firebase.database().ref('/players/' + name);
+  playerRef.set({
+    name: name,
+    wins: 0,
+    losses: 0,
+    choice: null
+  });
+  this.setState({currentPlayerTurn: 'p1'});
 }
 
 getChatData = () => {
   let ref = Firebase.database().ref('/chat');
   ref.on('value', snapshot => {
-    const state = snapshot.val();
-    console.log('what is coming back??', state);
+    const chatData = snapshot.val();
+    console.log('what is coming back??', chatData);
+  });
+}
+
+getGameData = () => {
+  let ref = Firebase.database().ref('/players');
+  ref.on('value', snapshot => {
+    const gameData = snapshot.val();
+    console.log('what is coming back??', Object.keys(gameData)[0]);
     // this.setState(state);
   });
-  console.log('DATA RETRIEVED');
 }
 
 componentDidMount() {
   this.getChatData();
+  this.getGameData();
 }
-
-// componentDidUpdate(prevProps, prevState) {
-//   // check on previous state
-//   // only write when it's different with the new state
-//   if (prevState !== this.state) {
-//     this.writeUserData();
-//   }
-// }
 
 handleShowMobileInstructions = () => {
   this.state.showInstructions 
@@ -64,16 +73,27 @@ handleTextChange = (e) => {
 saveName = () => {
   // call to db to save name goes here
   this.setState({nameChosen: true});
+  this.setPlayer();
 }
 
 handleSelectChoice = (choice) => {
   console.log('choice is', choice);
   // const chosen = choice.split('1')[1] || choice.split('2')[1];
   this.setState({choice});
+  const {name} = this.state;
+  const playerRef = Firebase.database().ref('/players/' + name);
+  playerRef.set({
+    name: name,
+    wins: 0,
+    losses: 0,
+    choice: choice
+  });
+  this.setState({currentPlayerTurn: 'p2'});
+
 }
 
 render() {
-  const { name, contrast, error, p1turn, p2turn, nameChosen, choice } = this.state;
+  const { name, contrast, error, currentPlayerTurn, nameChosen, choice } = this.state;
   console.log('config', config);
   return (
     <div className="main">
@@ -124,14 +144,14 @@ render() {
         <div className='left-side'>
           <Display 
             player='p1' 
-            isTurn={p1turn} 
+            isTurn={currentPlayerTurn === 'p1'} 
             handleSelect={this.handleSelectChoice}
             choice={choice} />
         </div>
         <div className='right-side'>
           <Display 
             player='p2' 
-            isTurn={p2turn} 
+            isTurn={currentPlayerTurn === 'p2'} 
             handleSelect={this.handleSelectChoice}
             choice={choice} />
         </div>

@@ -7,8 +7,10 @@ class Input extends Component {
     const { name, handleTextChange } = this.props;
     return (
       <div className="input">
-        <input value={name} 
-          onChange={handleTextChange} />
+        <input 
+          value={name} 
+          onChange={handleTextChange}
+          placeholder='Enter your name to play!' />
       </div>
     );
   }

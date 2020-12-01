@@ -15,7 +15,7 @@
     background-image: url('./assets/woodgrain.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    padding: .8em;
+    padding: .5em;
     width: 70%;
 }
 
@@ -24,6 +24,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     width: 50%;
+    border-right: 0.5px solid black;
 }
 
 .right-side {
@@ -31,6 +32,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     width: 50%;
+    border-left: 0.5px solid black;
 }
 
 .name-display {
