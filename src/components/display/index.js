@@ -12,19 +12,19 @@ class Display extends Component {
       <div className='display' style={isTurn ? {border: '3px', borderColor: 'blue', borderStyle: 'solid'} 
         : {}}>
         <Rock 
-          display={true} // {isTurn}
+          display={isTurn}
           player={player} 
           handleSelect={handleSelect}
           choice={choice}
         />
         <Paper 
-          display={true} // {isTurn} 
+          display={isTurn} 
           player={player} 
           handleSelect={handleSelect}
           choice={choice}
         />
         <Scissors 
-          display={true} // {isTurn} 
+          display={isTurn} 
           player={player} 
           handleSelect={handleSelect}
           choice={choice}

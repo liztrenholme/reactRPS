@@ -1,4 +1,14 @@
 /* eslint-disable no-console */
+
+// 1. call to db to check for players
+// 2. if no players, assign to player one, if one player, assign to player two, otherwise say full
+// 3. if two players present, first turn starts
+// 4. player 1 selects and call is sent to db, second turn activated
+
+
+
+
+
 import React, { Component } from 'react';
 import './main.css';
 import Display from '../display/index';
@@ -15,14 +25,19 @@ Firebase.initializeApp(config);
 class Main extends Component {
 state = {
   name: '',
+  player: null,
   error: '',
   showInstructions: false,
   // p1turn: false,
   // p2turn: false,
   nameChosen: false,
   choice: '',
-  currentPlayers: 0,
-  currentPlayerTurn: null
+  currentPlayerTurn: null,
+  game: {
+    choice: '',
+    currentPlayers: 0,
+    currentPlayerTurn: null,
+  }
 }
 
 setPlayer = () => {
@@ -41,7 +56,7 @@ getChatData = () => {
   let ref = Firebase.database().ref('/chat');
   ref.on('value', snapshot => {
     const chatData = snapshot.val();
-    console.log('what is coming back??', chatData);
+    console.log('what is coming back for chat??', chatData);
   });
 }
 
@@ -49,7 +64,7 @@ getGameData = () => {
   let ref = Firebase.database().ref('/players');
   ref.on('value', snapshot => {
     const gameData = snapshot.val();
-    console.log('what is coming back??', Object.keys(gameData)[0]);
+    console.log('what is coming back for gamedata??', gameData);
     // this.setState(state);
   });
 }
@@ -89,12 +104,12 @@ handleSelectChoice = (choice) => {
     choice: choice
   });
   this.setState({currentPlayerTurn: 'p2'});
-
 }
 
 render() {
-  const { name, contrast, error, currentPlayerTurn, nameChosen, choice } = this.state;
+  const { name, contrast, error, currentPlayerTurn, nameChosen, choice, player } = this.state;
   console.log('config', config);
+  console.log('wtffff', nameChosen && currentPlayerTurn === 'p1');
   return (
     <div className="main">
       <h1 className='header' style={{color: contrast}}>Rock, Paper, Scissors</h1>
@@ -123,7 +138,7 @@ render() {
       </div> */}
       <div className='inputWithSave'>
         {nameChosen ? 
-          (<h1 className='name-display'>Hi {name}, you are player one!</h1>)
+          (<h1 className='name-display'>Hi {name}, you are player {player}!</h1>)
           : (<div className='inputWithSave'>
             <Input 
               name={name}
@@ -144,17 +159,17 @@ render() {
         <div className='left-side'>
           <Display 
             player='p1' 
-            isTurn={currentPlayerTurn === 'p1'} 
+            isTurn={nameChosen && currentPlayerTurn === 'p1'} 
             handleSelect={this.handleSelectChoice}
             choice={choice} />
         </div>
         <div className='right-side'>
           <Display 
             player='p2' 
-            isTurn={currentPlayerTurn === 'p2'} 
+            isTurn={nameChosen && currentPlayerTurn === 'p2'} 
             handleSelect={this.handleSelectChoice}
             choice={choice} />
-        </div>
+        </div> 
       </div>
       <div>
         <ChatBox />
