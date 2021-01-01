@@ -37,7 +37,8 @@ state = {
     choice: '',
     currentPlayers: 0,
     currentPlayerTurn: null,
-  }
+  },
+  chatData: {}
 }
 
 setPlayer = () => {
@@ -57,6 +58,7 @@ getChatData = () => {
   ref.on('value', snapshot => {
     const chatData = snapshot.val();
     console.log('what is coming back for chat??', chatData);
+    this.setState({chatData});
   });
 }
 
@@ -107,9 +109,9 @@ handleSelectChoice = (choice) => {
 }
 
 render() {
-  const { name, contrast, error, currentPlayerTurn, nameChosen, choice, player } = this.state;
-  console.log('config', config);
-  console.log('wtffff', nameChosen && currentPlayerTurn === 'p1');
+  const { name, contrast, error, currentPlayerTurn, nameChosen, choice, player, chatData } = this.state;
+  // console.log('config', config);
+  // console.log('wtffff', nameChosen && currentPlayerTurn === 'p1');
   return (
     <div className="main">
       <h1 className='header' style={{color: contrast}}>Rock, Paper, Scissors</h1>
@@ -172,7 +174,9 @@ render() {
         </div> 
       </div>
       <div>
-        <ChatBox />
+        <ChatBox
+          player={player}
+          chatData={chatData} />
       </div>
       <h3>Version: {json.version}</h3>
     </div>

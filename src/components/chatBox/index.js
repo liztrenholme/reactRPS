@@ -1,10 +1,12 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import './chatBox.css';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 class ChatBox extends Component {
   render() {
-    // const { player } = this.props;
+    const { player, chatData } = this.props;
+    console.log('in chatBox:', player, chatData);
     return (
       <div className='chat-box'>
         chat box
@@ -13,8 +15,9 @@ class ChatBox extends Component {
   }
 }
 
-// ChatBox.propTypes = {
-// //   player: PropTypes.string
-// };
+ChatBox.propTypes = {
+  player: PropTypes.string,
+  chatData: PropTypes.object
+};
 
 export default ChatBox;
