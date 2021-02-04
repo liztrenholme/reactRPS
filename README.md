@@ -1,1 +1,1 @@
-A game of Rock, Paper, Scissors built in React.
+A game of Rock, Paper, Scissors built in React.  Game will check for the presence of any player, initialize, then wait for seconf player.  Second player will log on and game will start.
