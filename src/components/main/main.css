@@ -17,6 +17,36 @@
     margin: 2em;
 }
 
+.stats-box {
+    font-family: 'Cabin Sketch', cursive;
+    border: double 2px black;
+    padding: 0.5em 1em;
+    border-radius: 15px;
+    /* margin-right: 2em;
+    margin-left: auto; */
+    position: absolute;
+    right: 2%;
+    top: 20%;
+    background-color: white;
+}
+
+.results-box {
+    background-color: white;
+    padding: 1em;
+    border-radius: 15px;
+    border: solid 1px black;
+}
+
+.results-display {
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+}
+
+.result {
+    margin: 0 auto;
+}
+
 .gameboard {
     display: flex;
     flex-direction: row;

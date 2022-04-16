@@ -15,6 +15,9 @@ import json from '../../../package.json';
 import Firebase from 'firebase';
 import config from '../../config';
 import ChatBox from '../chatBox';
+import Scissors from '../scissors';
+import Paper from '../paper';
+import Rock from '../rock';
 
 window.config = config;
 
@@ -36,7 +39,10 @@ state = {
   playerOneExists: false,
   playerTwoExists: false,
   winner: null,
-  opponentChoice: null
+  opponentChoice: null,
+  opponentName: '',
+  wins: 0,
+  losses: 0
 }
 
 getChatData = () => {
@@ -48,17 +54,18 @@ getChatData = () => {
 }
 
 playAgain = () => {
+  // const {winner, name} = this.state;
+  // let {wins, losses} = this.state;
+  // winner === name ? wins++ : losses++;
   this.setState({
-    choice: '',
-    currentPlayerTurn: null,
-    currentPlayers: 0,
-    chatData: {},
-    playerOneExists: false,
-    playerTwoExists: false,
+    // choice: '',
     winner: null,
-    opponentChoice: null
+    opponentChoice: null,
+    // wins,
+    // losses
   });
-  this.gameStart();
+  this.handleSelectChoice('');
+  // this.gameStart();
 }
 
 getGameData = () => {
@@ -98,12 +105,18 @@ gameStart = () => {
   let ref = Firebase.database().ref('players');
   let playerOneExists;
   let playerTwoExists;
-  let {winner, opponentChoice, player} = this.state;
+  let {winner, opponentChoice, wins, losses, opponentName} = this.state;
+  const {name} = this.state;
   ref.on('value', snapshot => {
     const gameData = snapshot.val();
     console.log('what is coming back for gamedata??', gameData);
     playerOneExists = snapshot.child(1).exists();
     playerTwoExists = snapshot.child(2).exists();
+
+    if (gameData && gameData[1] && gameData[1].name && gameData[2] && gameData[2].name) {
+      opponentName = gameData[1].name === name ? gameData[2].name : gameData[1].name;
+      this.setState({opponentName});
+    }
 
     if (gameData && gameData[1] && gameData[1].choice && gameData[2] && gameData[2].choice) {
       const playerOneChoice = gameData[1].choice;
@@ -136,12 +149,13 @@ gameStart = () => {
       if (playerOneChoice === 'scissors' && playerTwoChoice === 'paper') {
         winner = gameData[1].name;
       }
-      player === 1 ? opponentChoice = gameData[2].choice : gameData[1].choice;
+      name === gameData[1].name ? opponentChoice = gameData[2].choice : opponentChoice = gameData[1].choice;
+      console.log(opponentChoice, 'opponent choice');
+      winner !== 'tie' ? (winner === name ? wins++ : losses++) : null;
     }
     
-    this.setState({playerOneExists, playerTwoExists, winner, opponentChoice});
+    this.setState({playerOneExists, playerTwoExists, winner, opponentChoice, wins, losses});
   });
-  console.log('CURRENT PLAYERS', this.state.currentPlayers, playerOneExists, playerTwoExists);
   if (this.state.currentPlayers < 2) {
     let {player} = this.state;
     if (playerOneExists && !winner) {
@@ -155,12 +169,12 @@ gameStart = () => {
 
     // Creates key based on assigned player number
     const playerRef = Firebase.database().ref('/players/' + player);
-    // Creates player object. 'choice' is unnecessary here, but I left it in to be as complete as possible
+    // Creates player object.
     playerRef.set({
       name: this.state.name,
-      wins: 0,
-      losses: 0,
-      choice: null
+      wins: this.state.wins,
+      losses: this.state.losses,
+      choice: ''
     });
 
     // On disconnect remove this user's player object
@@ -180,19 +194,13 @@ gameStart = () => {
     this.setState({player});
   }
   else {
-    if (winner) {
-      this.setState({error: `The winner is ${winner}!`});
-    } else {
-    // If current players is "2", will not allow the player to join
-      this.setState({error: 'Sorry, Game Full! Try Again Later!'});
-    }
+    this.setState({error: 'Sorry, Game Full! Try Again Later!'});
   }
 }
 
 componentDidMount() {
   this.getChatData();
   this.getGameData();
-  // this.gameStart();
 }
 
 handleShowMobileInstructions = () => {
@@ -210,20 +218,18 @@ saveName = () => {
   // call to db to save name goes here
   this.setState({nameChosen: true});
   this.gameStart();
-  // this.setPlayer();
 }
 
 handleSelectChoice = (choice) => {
-  console.log('choice is', choice);
-  // const chosen = choice.split('1')[1] || choice.split('2')[1];
   this.setState({choice});
-  const {name, player} = this.state;
+  const {name, player, wins, losses} = this.state;
+  console.log('name, player, wins, losses', name, player, wins, losses);
   const playerRef = Firebase.database().ref('/players/' + player);
   const currentTurnRef = Firebase.database().ref('turn');
   playerRef.set({
     name: name,
-    wins: 0,
-    losses: 0,
+    wins: wins,
+    losses: losses,
     choice: choice
   });
   this.state.currentPlayerTurn === 1 ? currentTurnRef.set(2) : currentTurnRef.set(1);
@@ -243,7 +249,10 @@ render() {
     playerOneExists, 
     playerTwoExists, 
     currentPlayers,
-    opponentChoice
+    opponentChoice,
+    wins,
+    losses,
+    opponentName
   } = this.state;
   console.log('state:::', this.state);
   return (
@@ -260,7 +269,7 @@ render() {
         </div> */}
         <div className='inputWithSave'>
           {nameChosen && player ? 
-            (<h1 className='name-display'>Hi {name}, you are player {player}!  {currentPlayers < 2 ? 'Waiting for player two to join...' : null} </h1>)
+            (<h1 className='name-display'>Hi {name}, you are player {player}! {currentPlayers < 2 ? 'Waiting for player two to join...' : null} </h1>)
             : (<div className='inputWithSave'>
               <Input 
                 name={name}
@@ -276,13 +285,25 @@ render() {
         </div>
         {!winner && playerOneExists && playerTwoExists ? <div>
           {currentPlayerTurn === player ? <h3 style={{color: 'darkblue'}}>Your turn!</h3> 
-            : <h3 style={{color: 'darkblue'}}>Waiting for opponent...</h3>}
+            : <h3 style={{color: 'darkblue'}}>Waiting for {opponentName} to make their choice...</h3>}
         </div> : null}
+        <div className='stats-box'>
+          <h3>Wins: {wins}</h3>
+          <h3>Losses: {losses}</h3>
+        </div>
         <div>
           <h3 style={{color: 'darkRed'}}>{error}</h3>
         </div>
-        {winner ? <div>
+        {winner ? <div className='results-box'>
           <h1 style={{color: 'darkRed'}}>The winner is {winner}!</h1>
+          <div className='results-display'>
+            <div className='result'>
+              <span>{name} chose:</span>{choice === 'rock' ? <Rock display small /> : choice === 'scissors' ? <Scissors display small /> : choice === 'paper' ? <Paper display small /> : null}
+            </div>
+            <div className='result'>
+              <span>{opponentName} chose:</span>{opponentChoice === 'rock' ? <Rock display small /> : opponentChoice === 'scissors' ? <Scissors display small /> : opponentChoice === 'paper' ? <Paper display small /> : null}
+            </div>
+          </div>
         </div> : null}
         {!winner && playerOneExists && playerTwoExists ? <div className='gameboard'>
           <div className='left-side'>

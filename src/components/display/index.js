@@ -9,7 +9,7 @@ import Scissors from '../scissors';
 class Display extends Component {
   render() {
     const { player, isTurn, handleSelect, choice, winner, opponentChoice } = this.props;
-    return (
+    return isTurn ? (
       <div className='display' style={isTurn ? {border: '3px', borderColor: 'blue', borderStyle: 'solid'} 
         : {}}>
         <Rock 
@@ -28,6 +28,24 @@ class Display extends Component {
           display={(!winner && isTurn) || (winner && choice === 'scissors') || (winner && opponentChoice === 'scissors')} 
           player={player} 
           handleSelect={handleSelect}
+          choice={choice}
+        />
+      </div>
+    ) : (
+      <div className='not-turn' style={{opacity: '0.5'}}>
+        <Rock 
+          display
+          player={player} 
+          choice={choice}
+        />
+        <Paper 
+          display
+          player={player} 
+          choice={choice}
+        />
+        <Scissors 
+          display
+          player={player} 
           choice={choice}
         />
       </div>
