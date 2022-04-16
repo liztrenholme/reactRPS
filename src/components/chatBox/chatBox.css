@@ -1,0 +1,40 @@
+.chat-box {
+    background-color: #fff;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 15px;
+    min-width: fit-content;
+}
+
+.message-display-box {
+    height: 20em;
+    overflow: scroll;
+    padding: 1em;
+}
+
+.left-bubble {
+    text-align: left;
+}
+
+.right-bubble {
+    text-align: right;
+}
+
+.message-bubble {
+    border: solid 1px lightslategray;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 0.5em;
+}
+
+.message-bubble-right {
+    background-color: darkgray;
+    margin-left: auto;
+    margin-bottom: -2px;
+}
+
+.message-bubble-left {
+    background-color: gainsboro;
+    margin-right: auto;
+    margin-top: -2px;
+}
