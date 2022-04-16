@@ -4,15 +4,14 @@ import scissorsImg from './assets/scissors.png';
 import PropTypes from 'prop-types';
 
 const Scissors = ({ handleSelect, display, player, choice }) => {
-  const name = `${player}scissors`;
+  const name = 'scissors';
   return display ? (
     <div>
       <img 
-        className='sketch'
         src={scissorsImg} 
         alt={name}
         onClick={() => handleSelect(name)}
-        style={choice === name ? {} : {opacity: '.5'}} />
+        className={`player${player} ${choice}-${player} sketch`} />
     </div>
   ) : null;
 };
@@ -20,7 +19,7 @@ const Scissors = ({ handleSelect, display, player, choice }) => {
 Scissors.propTypes = {
   handleSelect: PropTypes.func,
   display: PropTypes.bool,
-  player: PropTypes.string,
+  player: PropTypes.number,
   choice: PropTypes.string
 };
   
