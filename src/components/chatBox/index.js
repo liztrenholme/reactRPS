@@ -88,7 +88,7 @@ class ChatBox extends Component {
 }
 
 ChatBox.propTypes = {
-  player: PropTypes.string,
+  player: PropTypes.number,
   name: PropTypes.string,
   chatData: PropTypes.object,
   firebase: PropTypes.object
