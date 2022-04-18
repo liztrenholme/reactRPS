@@ -54,18 +54,45 @@ getChatData = () => {
 }
 
 playAgain = () => {
-  // const {winner, name} = this.state;
-  // let {wins, losses} = this.state;
-  // winner === name ? wins++ : losses++;
-  this.setState({
-    // choice: '',
-    winner: null,
-    opponentChoice: null,
-    // wins,
-    // losses
+
+  let ref = Firebase.database().ref('players');
+  let thisPlayer;
+  let otherPlayer;
+
+  ref.on('value', snapshot => {
+    const gameData = snapshot.val();
+    console.log('gameData in playAgain...', gameData);
+    if (gameData && gameData[1] && gameData[1].name && gameData[1].name === this.state.name) {
+      thisPlayer = 1;
+      otherPlayer = 2;
+    } else {
+      thisPlayer = 2;
+      otherPlayer = 1;
+    }
+    
+    const playerRef = Firebase.database().ref('/players/' + thisPlayer);
+    playerRef.set({
+      name: this.state.name,
+      wins: this.state.wins,
+      losses: this.state.losses,
+      choice: ''
+    });
+    const opponentRef = Firebase.database().ref('/players/' + otherPlayer);
+    if (gameData && gameData[otherPlayer]) {
+      opponentRef.set({
+        name: this.state.opponentName,
+        wins: gameData[otherPlayer].wins,
+        losses: gameData[otherPlayer].losses,
+        choice: ''
+      });
+    }
   });
-  this.handleSelectChoice('');
-  // this.gameStart();
+  this.setState({choice: '', opponentChoice: '', winner: null});
+}
+
+refresh = () => {
+  // not the best, but temporary because of buggy playAgain
+  window.location.reload();
 }
 
 getGameData = () => {
@@ -121,7 +148,6 @@ gameStart = () => {
     if (gameData && gameData[1] && gameData[1].choice && gameData[2] && gameData[2].choice) {
       const playerOneChoice = gameData[1].choice;
       const playerTwoChoice = gameData[2].choice;
-      console.log('CHOICES', playerOneChoice, playerTwoChoice);
       if (playerOneChoice === 'paper' && playerTwoChoice === 'paper') {
         winner = 'tie';
       }
@@ -150,7 +176,6 @@ gameStart = () => {
         winner = gameData[1].name;
       }
       name === gameData[1].name ? opponentChoice = gameData[2].choice : opponentChoice = gameData[1].choice;
-      console.log(opponentChoice, 'opponent choice');
       winner !== 'tie' ? (winner === name ? wins++ : losses++) : null;
     }
     
@@ -328,7 +353,8 @@ render() {
         {winner ?
           <button 
             className='saveBtn' 
-            onClick={this.playAgain}>
+            // onClick={this.playAgain}
+            onClick={this.refresh}>
                   Play again?
           </button> : null}
         <div>
